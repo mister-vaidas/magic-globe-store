@@ -1,14 +1,19 @@
 import Image from 'next/image';
-import { getTranslations } from 'next-intl/server';
-import { PRODUCT } from '@/data/product';
+import Link from 'next/link';
+import { PRODUCT, LocaleKey } from '@/data/product';
+import { loadMessages } from '@/lib/messages';
 
-type Props = { params: { locale: 'en' | 'lt' } };
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<{ locale: LocaleKey }>;
+}) {
+  const { locale } = await params;
+  const messages = await loadMessages(locale);
 
-export default async function ProductPage({ params: { locale } }: Props) {
-  const t = await getTranslations('common');
   const title = PRODUCT.title[locale];
   const img = PRODUCT.images[0];
-
+  const bullets = PRODUCT.bullets[locale];
   const subtotal = PRODUCT.priceEUR;
   const shipping = PRODUCT.shipping.flatFeeEUR;
   const total = (subtotal + shipping).toFixed(2);
@@ -20,8 +25,8 @@ export default async function ProductPage({ params: { locale } }: Props) {
           <Image
             src={img.src}
             alt={img.alt[locale]}
-            width={600}
-            height={600}
+            width={800}
+            height={800}
             className="h-auto w-full"
             priority
           />
@@ -34,7 +39,7 @@ export default async function ProductPage({ params: { locale } }: Props) {
           </p>
 
           <ul className="mt-6 space-y-2 text-sm text-gray-800">
-            {(PRODUCT.bullets[locale] || []).map((b, i) => (
+            {bullets.map((b, i) => (
               <li key={i} className="flex gap-2">
                 <span>•</span>
                 <span>{b}</span>
@@ -45,9 +50,7 @@ export default async function ProductPage({ params: { locale } }: Props) {
           <div className="mt-8 rounded-lg border p-4">
             <div className="flex items-center justify-between text-sm">
               <span>Subtotal</span>
-              <span>
-                €{subtotal.toFixed(2)}
-              </span>
+              <span>€{subtotal.toFixed(2)}</span>
             </div>
             <div className="mt-2 flex items-center justify-between text-sm">
               <span>Shipping</span>
@@ -58,13 +61,18 @@ export default async function ProductPage({ params: { locale } }: Props) {
               <span>€{total}</span>
             </div>
 
-            {/* Placeholder Buy button — will wire PayPal next */}
             <a
-              href="#checkout"
+              href="#paypal"
               className="mt-6 inline-flex w-full items-center justify-center rounded-lg bg-black px-5 py-3 text-white"
             >
-              {t('cta.buy')}
+              {messages['cta.buy']}
             </a>
+
+            <div className="mt-3 text-center">
+              <Link href={`/${locale}`} className="text-sm text-gray-600 underline">
+                ← {locale === 'lt' ? 'Grįžti' : 'Back'}
+              </Link>
+            </div>
           </div>
         </div>
       </div>

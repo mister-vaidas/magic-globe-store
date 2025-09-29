@@ -5,7 +5,7 @@ export const PRODUCT = {
     en: 'LeapFrog Magic Adventures Globe',
     lt: 'LeapFrog Magiškas Nuotykių Gaublys',
   },
-  priceEUR: 139.0, // set your retail price
+  priceEUR: 139.0,        // set your retail price
   currency: 'EUR',
   shipping: {
     en: 'Ships from UK to Lithuania in 4–7 business days.',
@@ -27,4 +27,6 @@ export const PRODUCT = {
   images: [
     { src: '/globe.svg', alt: { en: 'Magic Adventures Globe', lt: 'Magiškas nuotykių gaublys' } },
   ],
-};
+} as const;
+
+export type LocaleKey = keyof typeof PRODUCT.title; // 'en' | 'lt'

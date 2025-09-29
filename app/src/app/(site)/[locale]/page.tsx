@@ -1,12 +1,13 @@
 import Link from 'next/link';
+import { loadMessages } from '@/lib/messages';
 
 export default async function Home({
   params,
 }: {
   params: Promise<{ locale: 'en' | 'lt' }>;
 }) {
-  const { locale } = await params; // ✅ await params
-  const messages = (await import(`../../../../locales/${locale}/common.json`)).default as Record<string, string>;
+  const { locale } = await params;
+  const messages = await loadMessages(locale);
 
   return (
     <section className="px-4 py-10 sm:py-16">
