@@ -1,7 +1,8 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { PRODUCT, LocaleKey } from '@/data/product';
-import { loadMessages } from '@/lib/messages';
+import Image from "next/image";
+import Link from "next/link";
+import { PRODUCT, LocaleKey } from "@/data/product";
+import { loadMessages } from "@/lib/messages";
+import CheckoutButtons from "@/components/checkout/CheckoutButtons";
 
 export default async function ProductPage({
   params,
@@ -35,7 +36,7 @@ export default async function ProductPage({
         <div>
           <h1 className="text-2xl font-bold sm:text-3xl">{title}</h1>
           <p className="mt-2 text-sm text-gray-600">
-            {locale === 'lt' ? PRODUCT.shipping.lt : PRODUCT.shipping.en}
+            {locale === "lt" ? PRODUCT.shipping.lt : PRODUCT.shipping.en}
           </p>
 
           <ul className="mt-6 space-y-2 text-sm text-gray-800">
@@ -61,16 +62,19 @@ export default async function ProductPage({
               <span>€{total}</span>
             </div>
 
-            <a
-              href="#paypal"
-              className="mt-6 inline-flex w-full items-center justify-center rounded-lg bg-black px-5 py-3 text-white"
-            >
-              {messages['cta.buy']}
-            </a>
+            <CheckoutButtons
+              amount={subtotal + shipping}
+              currency="EUR"
+              description={title}
+              locale={locale}
+            />
 
             <div className="mt-3 text-center">
-              <Link href={`/${locale}`} className="text-sm text-gray-600 underline">
-                ← {locale === 'lt' ? 'Grįžti' : 'Back'}
+              <Link
+                href={`/${locale}`}
+                className="text-sm text-gray-600 underline"
+              >
+                ← {locale === "lt" ? "Grįžti" : "Back"}
               </Link>
             </div>
           </div>
